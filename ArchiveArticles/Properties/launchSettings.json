@@ -1,0 +1,8 @@
+﻿{
+  "profiles": {
+    "ArchiveArticles": {
+      "commandName": "Project",
+      "commandLineArgs": "--path D:\\docs\\articles"
+    }
+  }
+}

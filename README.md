@@ -1,4 +1,5 @@
 # ArchiveArticles
+
 Archive saved .html pages with content ("*_files" folder) into 7-zip archive
 
 # Usage
@@ -6,3 +7,7 @@ Archive saved .html pages with content ("*_files" folder) into 7-zip archive
 `ArchiveArticles --path <folder>`
 
 `ArchiveArticles --help`
+
+# Requirements
+
+- Installed 7-zip archiver

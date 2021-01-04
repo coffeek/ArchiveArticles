@@ -16,7 +16,13 @@ namespace ArchiveArticles
     {
       LogManager.LoadConfiguration("nlog.config");
       LogManager.ReconfigExistingLoggers();
-      
+      SubscribeToUnhandledException();
+      logger.Info("Start application");
+      Parser.Default.ParseArguments<Options>(args).WithParsed(Run);
+    }
+    
+    private static void SubscribeToUnhandledException()
+    {
       AppDomain.CurrentDomain.UnhandledException += (s, e) =>
       {
         logger.Error(e.ExceptionObject);
@@ -24,8 +30,6 @@ namespace ArchiveArticles
         if (e.IsTerminating)
           Environment.Exit(-1);
       };
-      logger.Info("Start application");
-      Parser.Default.ParseArguments<Options>(args).WithParsed(Run);
     }
 
     private static void Run(Options options)

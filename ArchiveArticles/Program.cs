@@ -10,14 +10,14 @@ namespace ArchiveArticles;
 
 internal static class Program
 {
-  private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+  private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
   private static void Main(string[] args)
   {
     LogManager.LoadConfiguration("nlog.config");
     LogManager.ReconfigExistingLoggers();
     SubscribeToUnhandledException();
-    logger.Info("Start application");
+    Logger.Info("Start application");
     Parser.Default.ParseArguments<Options>(args).WithParsed(Run);
   }
     
@@ -25,7 +25,7 @@ internal static class Program
   {
     AppDomain.CurrentDomain.UnhandledException += (_, e) =>
     {
-      logger.Error(e.ExceptionObject);
+      Logger.Error(e.ExceptionObject);
       LogManager.Shutdown();
       if (e.IsTerminating)
         Environment.Exit(-1);
@@ -34,15 +34,15 @@ internal static class Program
 
   private static void Run(Options options)
   {
-    logger.Trace("Configure application");
+    Logger.Trace("Configure application");
     var config = new ConfigurationBuilder().Build();
     var servicesProvider = ConfigureServices(config);
 
-    logger.Trace("Start archiver");
+    Logger.Trace("Start archiver");
     var archiver = servicesProvider.GetRequiredService<Archiver>();
     archiver.Archive(options.Path);
 
-    logger.Info("Shutdown application");
+    Logger.Info("Shutdown application");
   }
 
   private static ServiceProvider ConfigureServices(IConfiguration config)

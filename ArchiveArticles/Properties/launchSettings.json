@@ -2,7 +2,7 @@
   "profiles": {
     "ArchiveArticles": {
       "commandName": "Project",
-      "commandLineArgs": "--path D:\\docs\\articles"
+      "commandLineArgs": "--path /home/mike/Downloads"
     }
   }
 }

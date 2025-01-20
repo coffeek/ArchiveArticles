@@ -10,8 +10,7 @@ internal sealed class Archiver(ILogger<Archiver> logger)
 {
   public void Archive(string folderPath)
   {
-    if (folderPath == null)
-      throw new ArgumentNullException(nameof(folderPath));
+    ArgumentNullException.ThrowIfNull(folderPath);
 
     var rootDirectory = new DirectoryInfo(folderPath);
     if (!rootDirectory.Exists)
@@ -21,8 +20,8 @@ internal sealed class Archiver(ILogger<Archiver> logger)
     var infos = rootDirectory.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly);
     foreach (var filesFolder in infos.OfType<DirectoryInfo>().Where(di => di.Name.EndsWith("_files")))
     {
-      var htmlFileName = filesFolder.Name.Substring(0, filesFolder.Name.Length - "_files".Length);
-      logger.LogTrace($"Process {htmlFileName}");
+      var htmlFileName = filesFolder.Name[..^"_files".Length];
+      logger.LogTrace("Process \"{htmlFileName}\"", htmlFileName);
       var htmlFile = infos.OfType<FileInfo>()
         .FirstOrDefault(fi => fi.Name == $"{htmlFileName}.html" || fi.Name == $"{htmlFileName}.htm");
       if (htmlFile == null)
@@ -37,7 +36,7 @@ internal sealed class Archiver(ILogger<Archiver> logger)
         RedirectStandardOutput = true,
         WorkingDirectory = rootDirectory.FullName
       };
-      logger.LogInformation($"Archive \"{htmlFile.FullName}\"");
+      logger.LogInformation("Archive \"{htmlFileName}\"", htmlFile.FullName);
       using var process = Process.Start(si);
       if (process == null)
       {
@@ -48,7 +47,7 @@ internal sealed class Archiver(ILogger<Archiver> logger)
       if (process.ExitCode != 0)
         logger.LogError(process.StandardError.ReadToEnd());
       else
-        logger.LogInformation($"Compress complete: \"{htmlFileName}\"");
+        logger.LogInformation("Compress complete: \"{htmlFileName}\"", htmlFileName);
     }
   }
 }
